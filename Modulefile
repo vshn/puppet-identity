@@ -1,0 +1,10 @@
+name          'tobru-identity'
+version       '0.1.0'
+source        'git@git.vshn.net:vshn-puppet/identity.git'
+author        'Tobias Brunner'
+license       'BSD-3-Clause'
+summary       'Provides helpers to manage users and groups'
+description   ''
+project_page  'git@git.vshn.net:vshn-puppet/identity.git'
+
+dependency 'puppetlabs/stdlib'
