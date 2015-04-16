@@ -1,11 +1,29 @@
 # == Class: identity
 #
-# Full description of class identity here.
+# Manages identities (users and groups)
 #
 # === Parameters
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
+# [*user_defaults*]
+#   Default: {}.
+#
+# [*users*]
+#   Default: {}.
+#
+# [*group_defaults*]
+#   Default: {}.
+#
+# [*groups*]
+#   Default: {}.
+#
+# [*manage_skel*]
+#   Default: false.
+#
+# [*skel_source*]
+#   Default: undef.
+#
+# [*dotfiles_source*]
+#   Default: undef.
 #
 # === Examples
 #
@@ -22,25 +40,38 @@
 # Copyright 2015 Tobias Brunner
 #
 class identity (
-  $package_ensure      = $::identity::params::package_ensure,
-  $package_name        = $::identity::params::package_name,
-  $service_name        = $::identity::params::service_name,
-  $service_enable      = $::identity::params::service_enable,
-  $service_ensure      = $::identity::params::service_ensure,
-  $service_manage      = $::identity::params::service_manage,
-) inherits ::identity::params {
+  $user_defaults   = {},
+  $users           = {},
+  $group_defaults  = {},
+  $groups          = {},
+  $manage_skel     = false,
+  $skel_source     = undef,
+  $dotfiles_source = undef,
+) {
 
-  # validate parameters here:
-  # validate_absolute_path, validate_bool, validate_string, validate_hash
-  # validate_array, ... (see stdlib docs)
+  validate_hash($user_defaults)
+  validate_hash($users)
+  validate_hash($group_defaults)
+  validate_hash($groups)
 
-  class { '::identity::install': } ->
-  class { '::identity::config': } ~>
-  class { '::identity::service': } ->
-  Class['::identity']
+  if $users {
+    create_resources('identity::user',$users,$user_defaults)
+  }
+  if $groups {
+    create_resources('identity::group',$groups,$group_defaults)
+  }
 
-  contain ::identity::install
-  contain ::identity::config
-  contain ::identity::service
+  if $manage_skel {
+    # deliver files into /etc/skel
+    file { '/etc/skel':
+      ensure  => directory,
+      source  => $skel_source,
+      recurse => true,
+      purge   => true,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
+  }
 
 }
