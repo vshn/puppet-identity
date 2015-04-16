@@ -58,3 +58,38 @@ Since your module is awesome, other users will want to play with it. Let them kn
 ## Release Notes/Contributors/Etc **Optional**
 
 If you aren't using changelog, put your release notes here (though you should consider using changelog). You may also add any additional sections you feel are necessary or important to include here. Please use the `## ` header. 
+
+## Hiera example
+
+```
+---
+classes:
+  - identity
+
+identity::manage_skel: true
+identity::skel_source: 'puppet:///modules/identity_data/skel'
+identity::dotfiles_source: 'puppet:///modules/identity_data'
+
+identity::user_defaults:
+  ignore_uid_gid: false
+  groups:
+    - users
+
+identity::users:
+  test.user:
+    ensure: present
+    uid: 2001
+    comment: 'Test User'
+    password: 'pwhash'
+    ssh_keys:
+      main:
+        key: 'thekey'
+    groups:
+      - staff
+    manage_dotfiles: true
+  zwei.user:
+    ensure: present
+    comment: 'Test User2'
+    groups:
+      - staff
+```
