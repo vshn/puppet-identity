@@ -53,7 +53,7 @@ define identity::user (
   $ensure          = present,
   $comment         = '',
   $uid             = undef,
-  $gid             = $uid,
+  $gid             = undef,
   $groups          = [],
   $password        = undef,
   $ssh_keys        = {},
@@ -91,7 +91,10 @@ define identity::user (
     $_gid = undef
   } else {
     $_uid = $uid
-    $_gid = $gid
+    $_gid = $gid ? {
+      undef   => $uid,
+      default => $gid,
+    }
   }
 
   # Define the resources
