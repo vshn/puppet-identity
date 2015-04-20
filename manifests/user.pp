@@ -66,6 +66,8 @@ define identity::user (
   $manage_dotfiles = false,
 ) {
 
+  include ::identity
+
   # Input validation
   validate_string($comment)
   validate_array($groups)
