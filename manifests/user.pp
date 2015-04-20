@@ -157,7 +157,7 @@ define identity::user (
         file { $home_dir:
           ensure  => directory,
           source  => $dotfiles_source,
-          recurse => true,
+          recurse => $home_perms_recursive,
           owner   => $username,
           group   => $username,
           mode    => $home_perms,
