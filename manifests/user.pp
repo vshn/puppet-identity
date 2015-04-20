@@ -83,6 +83,7 @@ define identity::user (
     undef   => "/home/${username}",
     default => $home,
   }
+  validate_absolute_path($home_dir)
 
   # ignore $uid and $gid, even if they are passed
   if $ignore_uid_gid {
@@ -117,10 +118,10 @@ define identity::user (
   case $ensure {
     'absent': {
       if $manage_home {
-        # TODO more validation needed
-        exec { "rm -rf ${home_dir}":
-          path   => [ '/bin', '/usr/bin' ],
-          onlyif => "test -d ${home_dir}",
+        file { $home_dir:
+          ensure => absent,
+          force  => true,
+          backup => '.puppet-bak',
         }
       }
       User[$username] -> Group[$username]
