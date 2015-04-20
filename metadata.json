@@ -1,17 +1,25 @@
 {
-  "name": "vshn-identity",
-  "version": "1.0.0",
+  "name": "vshnops-identity",
+  "version": "1.0.2",
   "author": "Tobias Brunner",
   "summary": "Provides helpers to manage users and groups",
   "license": "BSD-3-Clause",
   "source": "https://github.com/vshn/puppet-identity",
   "project_page": "https://github.com/vshn/puppet-identity",
   "issues_url": "https://github.com/vshn/puppet-identity/issues",
-  "tags": ["user","group","account","identity"],
+  "tags": [
+    "user",
+    "group",
+    "account",
+    "identity"
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "12.04", "14.04" ]
+      "operatingsystemrelease": [
+        "12.04",
+        "14.04"
+      ]
     }
   ],
   "dependencies": [
