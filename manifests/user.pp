@@ -36,6 +36,12 @@
 # [*home*]
 #   Default: /home/$username. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-home
 #
+# [*home_perms_recursive*]
+#   Default: false. Manage home folder permissions recursively.
+#
+# [*home_perms*]
+#   Default: 0755. Home folder permissions
+#
 # [*system*]
 #   Default: false. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-system
 #
@@ -50,20 +56,22 @@
 #   to the users home directory. They won't be purged if they are not there.
 #
 define identity::user (
-  $ensure          = present,
-  $comment         = '',
-  $uid             = undef,
-  $gid             = undef,
-  $groups          = [],
-  $password        = undef,
-  $ssh_keys        = {},
-  $purge_ssh_keys  = true,
-  $manage_home     = true,
-  $home            = undef,
-  $system          = false,
-  $shell           = '/bin/bash',
-  $ignore_uid_gid  = false,
-  $manage_dotfiles = false,
+  $ensure               = present,
+  $comment              = '',
+  $uid                  = undef,
+  $gid                  = undef,
+  $groups               = [],
+  $password             = undef,
+  $ssh_keys             = {},
+  $purge_ssh_keys       = true,
+  $manage_home          = true,
+  $home                 = undef,
+  $home_perms_recursive = false,
+  $home_perms           = '0755',
+  $system               = false,
+  $shell                = '/bin/bash',
+  $ignore_uid_gid       = false,
+  $manage_dotfiles      = false,
 ) {
 
   include ::identity
@@ -141,15 +149,18 @@ define identity::user (
         }
         create_resources('ssh_authorized_key', $ssh_keys, $ssh_key_defaults)
       }
-      if ($manage_dotfiles and $manage_home) {
+      if $manage_home {
+        $dotfiles_source = $manage_dotfiles ? {
+          true    => "${::identity::dotfiles_source}/${username}",
+          default => undef,
+        }
         file { $home_dir:
-          ensure       => directory,
-          source       => "${::identity::dotfiles_source}/${username}",
-          recurse      => remote,
-          recurselimit => 1,
-          owner        => $username,
-          group        => $username,
-          mode         => '0600',
+          ensure  => directory,
+          source  => $dotfiles_source,
+          recurse => true,
+          owner   => $username,
+          group   => $username,
+          mode    => $home_perms,
         }
       }
     }
