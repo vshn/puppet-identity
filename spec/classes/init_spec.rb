@@ -18,6 +18,7 @@ describe 'identity' do
     }}
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to have_user_resource_count(1) }
+    it { is_expected.to contain_identity__user('testuser') }
   end
   describe "class with group defined" do
     let(:params) {{
@@ -25,5 +26,6 @@ describe 'identity' do
     }}
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to have_group_resource_count(1) }
+    it { is_expected.to contain_identity__group('testuser') }
   end
 end

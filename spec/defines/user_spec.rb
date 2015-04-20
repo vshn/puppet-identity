@@ -5,6 +5,7 @@ describe 'identity::user', :type => :define do
 
   it { should contain_user('testuser') }
   it { should contain_group('testuser') }
+  it { should contain_class('identity') }
 
   context 'with ensure => absent' do
     let(:params) { { 'ensure' => 'absent' } }
@@ -43,6 +44,7 @@ describe 'identity::user', :type => :define do
       :ssh_keys => { 'main' => { 'key' => 'thisisnotakey' } }
     }}
     it { is_expected.to have_ssh_authorized_key_resource_count(1) }
+    it { is_expected.to contain_ssh_authorized_key('main') }
   end
 
 end
