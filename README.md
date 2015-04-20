@@ -16,7 +16,7 @@
 This module manages identities like users and groups.
 
 [![Build Status](https://travis-ci.org/vshn/puppet-identity.svg?branch=master)](https://travis-ci.org/vshn/puppet-identity)
-[![vshn-identity](https://img.shields.io/puppetforge/v/vshn/identity.svg)](https://forge.puppetlabs.com/vshn/identity)
+[![vshnops-identity](https://img.shields.io/puppetforge/v/vshnops/identity.svg)](https://forge.puppetlabs.com/vshnops/identity)
 
 ## Module Description
 
