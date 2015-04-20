@@ -40,10 +40,10 @@
 # Copyright 2015 Tobias Brunner
 #
 class identity (
-  $user_defaults   = {},
-  $users           = {},
-  $group_defaults  = {},
-  $groups          = {},
+  $user_defaults   = hiera_hash('identity::user_defaults',{}),
+  $users           = hiera_hash('identity::users',{}),
+  $group_defaults  = hiera_hash('identity::group_defaults',{}),
+  $groups          = hiera_hash('identity::groups',{}),
   $manage_skel     = false,
   $skel_source     = undef,
   $dotfiles_source = undef,
