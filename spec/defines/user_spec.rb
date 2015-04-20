@@ -28,14 +28,20 @@ describe 'identity::user', :type => :define do
     it { should contain_group('testuser').with_gid(nil) }
   end
 
-  # manage_dotfiles
+  # manage_dotfiles and manage_home
   context 'with manage_dotfiles => true' do
     let(:params) { { 'manage_dotfiles' => true } }
     it { should contain_file('/home/testuser').with_ensure('directory') }
+    it { should contain_file('/home/testuser').with_mode('0755') }
   end
   context 'with manage_dotfiles => true and manage_home => false' do
     let(:params) { { 'manage_dotfiles' => true, 'manage_home' => false } }
     it { should_not contain_file('/home/testuser') }
+  end
+  context 'with home_perms => 0700' do
+    let(:params) { { 'home_perms' => '0700' } }
+    it { should contain_file('/home/testuser').with_ensure('directory') }
+    it { should contain_file('/home/testuser').with_mode('0700') }
   end
 
   # ssh keys
