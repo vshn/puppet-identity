@@ -1,9 +1,14 @@
 # CHANGELOG
 
-## v1.0.2 - UNRELEASED
+## [1.0.3] - 2015-04-20
+### Fixed
+* home directory permission recursion
 
+## [1.0.2] - 2015-04-20
+### Added
 * manage home directory permissions
 
-## v1.0.1
-
+## [1.0.1] - 2015-04-20
+### Added
 * Initial release
+
