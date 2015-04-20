@@ -1,4 +1,4 @@
-#### Table of Contents
+# Table of Contents
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
@@ -13,53 +13,49 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves. This is your 30 second elevator pitch for your module. Consider including OS/Puppet version it works with.       
+This module manages identities like users and groups.
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology the module integrates with and what that integration enables. This section should answer the questions: "What does this module *do*?" and "Why would I use it?"
+It provides some defined types and hiera helpers to mass-manage users and groups.
+Some features:
 
-If your module has a range of functionality (installation, configuration, management, etc.) this is the time to mention it.
+* Define users and groups in hiera
+* Cleanly remove users and groups with `ensure => absent`
+* Manage `skel` files
+* Deliver user specific dotfiles
 
 ## Setup
 
 ### What identity affects
 
-* A list of files, packages, services, or operations that the module will alter, impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form. 
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here. 
+* Users
+* Groups
+* `/etc/skel` directory
 
 ### Beginning with identity
 
-The very basic steps needed for a user to get the module up and running. 
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you may wish to include an additional section here: Upgrading (For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+It's not needed to include or instantiate the main class to use this module.
+The main class is just there to pass a hash of users and groups to the `create_resources` function
+and to manage the `skel` directory.
+The main functionality lies in the defined types (see below).
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing the fancy stuff with your module here. 
+You can pass a hash of users and groups to the main class or call the two
+defined types `identity::user` or `identity::group` directly, passing the correct parameters.
 
-## Reference
+Some specialities explained:
 
-Here, list the classes, types, providers, facts, etc contained in your module. This section should include all of the under-the-hood workings of your module so people know what the module is touching on their system but don't need to mess with things. (We are working on automating this section!)
+* **identity::user::ignore_uid_gid**: Allows to ignore the uid and gid parameters,
+  even if they define something. This can be usefull if you normally manage the
+  uids and gids, but want to make an exception on some systems.
+* **identity::user::manage_home**: Creates or deletes the home directory of the user.
+* **identity::user::manage_dotfiles**: If set to true, dofiles from *identity::dotfiles_source/$username* are
+  delivered to the users home directory. The files are not purged if they would disapear at the source.
+  This parameter also wants the parameter `manage_home` to be true.
 
-## Limitations
-
-This is where you list OS compatibility, version compatibility, etc.
-
-## Development
-
-Since your module is awesome, other users will want to play with it. Let them know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You may also add any additional sections you feel are necessary or important to include here. Please use the `## ` header. 
-
-## Hiera example
+### Hiera example
 
 ```
 ---
@@ -93,3 +89,24 @@ identity::users:
     groups:
       - staff
 ```
+
+## Reference
+
+All parameters are documented inline. Have a look at the .pp files in `manifests/`.
+
+## Limitations
+
+The module is just tested under Ubuntu 14.04, but it should work on other platforms too.
+As the module is using the `purge_ssh_keys` parameter, it's not compatibly with Puppet versions
+below 3.6.0.
+
+## Development
+
+1. Fork it ( https://github.com/tobru/puppet-knot/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+Make sure your PR passes the Rspec tests.
+

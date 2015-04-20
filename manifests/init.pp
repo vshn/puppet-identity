@@ -5,39 +5,49 @@
 # === Parameters
 #
 # [*user_defaults*]
-#   Default: {}.
+#   Default: {} (hiera_hash).
+#   Defaults to apply to all users created with the users hash.
 #
 # [*users*]
-#   Default: {}.
+#   Default: {} (hiera_hash).
+#   Hash of users to pass to the user defined type.
 #
 # [*group_defaults*]
-#   Default: {}.
+#   Default: {} (hiera_hash).
+#   Defaults to apply to all groups created with the groups hash.
 #
 # [*groups*]
-#   Default: {}.
+#   Default: {} (hiera_hash).
+#   Hash of groups to pass to the group defined type.
 #
 # [*manage_skel*]
 #   Default: false.
+#   Should the directory /etc/skel being managed by this class.
 #
 # [*skel_source*]
 #   Default: undef.
+#   Source of the /etc/skel directory if it is managed.
+#   Example: 'puppet:///modules/identity_data/skel'
 #
 # [*dotfiles_source*]
 #   Default: undef.
+#   Source of the user specific dotfiles directory.
+#   Example: 'puppet:///modules/identity_data'
 #
 # === Examples
 #
 #  class { 'identity':
-#    sample_parameter => 'sample value',
+#    manage_skel => true,
+#    skel_source => 'puppet:///modules/identity_data/skel',
 #  }
 #
 # === Authors
 #
-# Tobias Brunner
+# Tobias Brunner <tobias.brunner@vshn.ch>
 #
 # === Copyright
 #
-# Copyright 2015 Tobias Brunner
+# Copyright 2015 Tobias Brunner, VSHN AG
 #
 class identity (
   $user_defaults   = hiera_hash('identity::user_defaults',{}),
