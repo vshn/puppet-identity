@@ -58,6 +58,7 @@ describe 'identity::user', :type => :define do
       }'
     end
     it { should contain_group('test') }
+    it { should_not contain_group('testuser') }
   end
 
   # ssh keys

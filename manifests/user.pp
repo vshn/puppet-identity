@@ -94,8 +94,10 @@ define identity::user (
   validate_bool($manage_group)
 
   # Check if gid is set when manage_group is false
-  if (!$manage_group and !$gid) {
-    fail('If group is not managed, the gid has to be set')
+  unless $manage_group {
+    unless $gid {
+      fail('If group is not managed, the gid has to be set')
+    }
   }
 
   # Variable collection
