@@ -55,6 +55,10 @@
 #   Default: false. When true, then deliver some dotfiles found in identity::dotfiles_source/$username
 #   to the users home directory. They won't be purged if they are not there.
 #
+# [*manage_group*]
+#   Default: true. When true, then a group will be created with the same name as the user. If false
+#   the group will not be created and gid has to be set.
+#
 define identity::user (
   $ensure               = present,
   $comment              = '',
@@ -72,6 +76,7 @@ define identity::user (
   $shell                = '/bin/bash',
   $ignore_uid_gid       = false,
   $manage_dotfiles      = false,
+  $manage_group         = true,
 ) {
 
   include ::identity
@@ -86,6 +91,12 @@ define identity::user (
   validate_absolute_path($shell)
   validate_bool($ignore_uid_gid)
   validate_bool($manage_dotfiles)
+  validate_bool($manage_group)
+
+  # Check if gid is set when manage_group is false
+  if (!$manage_group and !$gid) {
+    fail('If group is not managed, the gid has to be set')
+  }
 
   # Variable collection
   $username = $title
@@ -108,10 +119,12 @@ define identity::user (
   }
 
   # Define the resources
-  group { $username:
-    ensure => $ensure,
-    gid    => $_gid,
-    system => $system,
+  if $manage_group {
+    group { $username:
+      ensure => $ensure,
+      gid    => $_gid,
+      system => $system,
+    }
   }
   user { $username:
     ensure         => $ensure,
@@ -137,10 +150,14 @@ define identity::user (
           backup => '.puppet-bak',
         }
       }
-      User[$username] -> Group[$username]
+      if $manage_group {
+        User[$username] -> Group[$username]
+      }
     }
     'present': {
-      Group[$username] -> User[$username]
+      if $manage_group {
+        Group[$username] -> User[$username]
+      }
       if $ssh_keys {
         $ssh_key_defaults = {
           ensure => present,
@@ -154,12 +171,17 @@ define identity::user (
           true    => "${::identity::dotfiles_source}/${username}",
           default => undef,
         }
+        if $manage_group {
+          $_group = $_gid
+        } else {
+          $_group = $username
+        }
         file { $home_dir:
           ensure  => directory,
           source  => $dotfiles_source,
           recurse => $home_perms_recursive,
           owner   => $username,
-          group   => $username,
+          group   => $_gid,
           mode    => $home_perms,
         }
       }
