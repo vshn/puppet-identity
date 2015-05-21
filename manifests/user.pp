@@ -183,7 +183,7 @@ define identity::user (
           source  => $dotfiles_source,
           recurse => $home_perms_recursive,
           owner   => $username,
-          group   => $_gid,
+          group   => $_group,
           mode    => $home_perms,
         }
       }
