@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.1.0] - 2015-05-27
+### Added
+* Allow to define if the main group of a user should be managed
+
 ## [1.0.3] - 2015-04-20
 ### Fixed
 * home directory permission recursion
