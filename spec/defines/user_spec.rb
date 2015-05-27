@@ -53,7 +53,7 @@ describe 'identity::user', :type => :define do
   context 'with manage_group => false' do
     let(:params) { { 'manage_group' => false, 'gid' => 'test' } }
     let(:pre_condition) do
-      'identity::group {"test":
+      'group { "test":
         gid => "3210",
       }'
     end
@@ -70,6 +70,5 @@ describe 'identity::user', :type => :define do
     it { is_expected.to have_ssh_authorized_key_resource_count(1) }
     it { is_expected.to contain_ssh_authorized_key('main') }
   end
-  
 
 end
