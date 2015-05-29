@@ -166,7 +166,7 @@ define identity::user (
           user   => $username,
           'type' => 'ssh-rsa'
         }
-        create_resources('ssh_authorized_key', $ssh_keys, $ssh_key_defaults)
+        create_resources('ssh_authorized_key',prefix($ssh_keys,"${name}-"),$ssh_key_defaults)
       }
       if $manage_home {
         $dotfiles_source = $manage_dotfiles ? {

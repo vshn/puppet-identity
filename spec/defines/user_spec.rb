@@ -68,7 +68,7 @@ describe 'identity::user', :type => :define do
     }}
     it { should contain_group('testuser') }
     it { is_expected.to have_ssh_authorized_key_resource_count(1) }
-    it { is_expected.to contain_ssh_authorized_key('main') }
+    it { is_expected.to contain_ssh_authorized_key('testuser-main') }
   end
 
 end
