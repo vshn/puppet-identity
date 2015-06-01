@@ -103,7 +103,7 @@ class identity (
       validate_hash($user_defaults)
       $_user_defaults = $user_defaults
     } else {
-      $_user_defaults = hiera_hash($hiera_user_defaults,{})
+      $_user_defaults = hiera_hash($hiera_user_defaults_key,{})
     }
     create_resources('identity::user',$_users,$_user_defaults)
   }
@@ -122,7 +122,7 @@ class identity (
       validate_hash($group_defaults)
       $_group_defaults = $group_defaults
     } else {
-      $_group_defaults = hiera_hash($hiera_group_defaults,{})
+      $_group_defaults = hiera_hash($hiera_group_defaults_key,{})
     }
     create_resources('identity::group',$_groups,$_group_defaults)
   }
