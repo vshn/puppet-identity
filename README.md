@@ -60,6 +60,12 @@ Some specialities explained:
 
 ### Hiera example
 
+The hiera keys which hold the users, user_defaults, groups and group_defaults data are specified
+in the main class parameters `$hiera_*_key` and can be overwritten.
+
+When passing data to the hashes by calling the main class from a Puppet manifest this data
+has precedence over Hiera data.
+
 ```
 ---
 classes:
@@ -69,12 +75,12 @@ identity::manage_skel: true
 identity::skel_source: 'puppet:///modules/identity_data/skel'
 identity::dotfiles_source: 'puppet:///modules/identity_data'
 
-identity::user_defaults:
+user_defaults:
   ignore_uid_gid: false
   groups:
     - users
 
-identity::users:
+users:
   test.user:
     ensure: present
     uid: 2001
