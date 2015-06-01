@@ -1,0 +1,16 @@
+groups:
+  testgroup1:
+    gid: 2001
+  testgroup2:
+    gid: 2002
+
+users:
+  testuser1:
+    uid: 2101
+    groups:
+      - testgroup1
+  testuser2:
+    uid: 2102
+    groups:
+      - testgroup2
+
