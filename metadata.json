@@ -1,6 +1,6 @@
 {
   "name": "vshnops-identity",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "author": "Tobias Brunner",
   "summary": "Provides helpers to manage users and groups",
   "license": "BSD-3-Clause",
