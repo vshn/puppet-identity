@@ -11,9 +11,6 @@ describe 'identity::user', :type => :define do
     it { should contain_group('testuser') }
     it { should contain_user('testuser').with_ensure('absent') }
     it { should contain_group('testuser').with_ensure('absent') }
-    context 'with ensure => absent and manage_home => true' do
-      it { should contain_file('/home/testuser').with_ensure('absent') }
-    end
   end
 
   # ignore_uid_gid functionality
