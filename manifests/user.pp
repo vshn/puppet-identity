@@ -145,12 +145,14 @@ define identity::user (
   # ensure resource ordering and proper cleanup
   case $ensure {
     'absent': {
-      if $manage_home {
-        file { $home_dir:
+      if ($manage_home) and ($ssh_keys) {
+        $ssh_key_defaults = {
           ensure => absent,
-          force  => true,
-          backup => '.puppet-bak',
+          user   => $username,
+          'type' => 'ssh-rsa',
+          before => User[$username],
         }
+        create_resources('ssh_authorized_key',prefix($ssh_keys,"${name}-"),$ssh_key_defaults)
       }
       if $manage_group {
         User[$username] -> Group[$username]
