@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [3.0.2] - 2015-06-16
+### Fixed
+* Module is now located under the "vshn" namespace on forge. "vshnops" is
+  being deprecated!
+
 ## [3.0.1] - 2015-06-15
 ### Fixed
 * Correct resource ordering when removing a user which has ssh authorized keys
