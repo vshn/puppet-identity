@@ -96,7 +96,7 @@ class identity (
       validate_hash($users)
       $_users = $users
     } else {
-      $_users = hiera_hash($hiera_users_key)
+      $_users = hiera_hash($hiera_users_key,{})
     }
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
@@ -115,7 +115,7 @@ class identity (
       validate_hash($groups)
       $_groups = $groups
     } else {
-      $_groups = hiera_hash($hiera_groups_key)
+      $_groups = hiera_hash($hiera_groups_key,{})
     }
     # check if $group_defaults parameter contains data
     if ! empty($group_defaults) {
