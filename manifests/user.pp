@@ -59,6 +59,11 @@
 #   Default: true. When true, then a group will be created with the same name as the user. If false
 #   the group will not be created and gid has to be set.
 #
+# [*emptypassword_policy*]
+#   Default: false. When true, a user with an empty password will have a `*` set as password instead of
+#   a `!` This is especially handy if you want to disable UsePAM on SSH. `!` is a locked account and without UsePAM
+#   the user can't login anymore with keybased authentication.
+
 define identity::user (
   $ensure               = present,
   $comment              = '',
@@ -77,6 +82,7 @@ define identity::user (
   $ignore_uid_gid       = false,
   $manage_dotfiles      = false,
   $manage_group         = true,
+  $emptypassword_policy = false,
 ) {
 
   include ::identity
@@ -92,6 +98,7 @@ define identity::user (
   validate_bool($ignore_uid_gid)
   validate_bool($manage_dotfiles)
   validate_bool($manage_group)
+  validate_bool($emptypassword_policy)
 
   # Check if gid is set when manage_group is false
   unless $manage_group {
@@ -128,6 +135,22 @@ define identity::user (
       system => $system,
     }
   }
+
+  # Handle passwords and empty password policy
+  # If a password is set we use that for the user
+  # If no password is set we decide upon emptypassword_policy
+  # By default an empty password in the user resource of puppet leads to a "!" - which is basically a locked user (if you connect with ssh key based authentication & UsePAM = no) you can't log in
+  # If the emptypassword_policy is set to true we'll set the password to "*" which still allows login via SSH if only keybased login is permitted.
+  if $password {
+    $_password = $password
+  } else {
+    if $emptypassword_policy {
+      $_password = "*"
+    } else {
+      $_password = "!"
+    }
+  }
+
   user { $username:
     ensure         => $ensure,
     uid            => $_uid,
@@ -137,7 +160,7 @@ define identity::user (
     comment        => $comment,
     managehome     => $manage_home,
     home           => $home_dir,
-    password       => $password,
+    password       => $_password,
     purge_ssh_keys => $purge_ssh_keys,
     system         => $system,
   }

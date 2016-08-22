@@ -58,6 +58,11 @@
 #   Source of the user specific dotfiles directory.
 #   Example: 'puppet:///modules/identity_data'
 #
+# [*emptypassword_policy*]
+#   Default: false. When true, a user with an empty password will have a `*` set as password instead of
+#   a `!` This is especially handy if you want to disable UsePAM on SSH. `!` is a locked account and without UsePAM
+#   the user can't login anymore with keybased authentication.
+
 # === Examples
 #
 #  class { 'identity':
@@ -87,6 +92,7 @@ class identity (
   $manage_skel = false,
   $skel_source = undef,
   $dotfiles_source = undef,
+  $emptypassword_policy = false,
 ) {
 
   # User handling
@@ -98,12 +104,21 @@ class identity (
     } else {
       $_users = hiera_hash($hiera_users_key,{})
     }
+
+    # check if $emptypassword_policy is validate_bool
+    validate_bool($emptypassword_policy)
+    if $emptypassword_policy {
+      $_emptypassword_policy = { "emptypassword_policy" => true}
+    } else {
+      $_emptypassword_policy = { "emptypassword_policy" => false}
+    }
+
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
       validate_hash($user_defaults)
-      $_user_defaults = $user_defaults
+      $_user_defaults = merge($user_defaults, $_emptypassword_policy)
     } else {
-      $_user_defaults = hiera_hash($hiera_user_defaults_key,{})
+      $_user_defaults = merge(hiera_hash($hiera_user_defaults_key,{}), $_emptypassword_policy)
     }
     create_resources('identity::user',$_users,$_user_defaults)
   }
