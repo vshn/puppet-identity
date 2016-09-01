@@ -59,10 +59,11 @@
 #   Example: 'puppet:///modules/identity_data'
 #
 # [*emptypassword_policy*]
-#   Default: false. When true, a user with an empty password will have a `*` set as password instead of
-#   a `!`. This is especially handy if you want to disable UsePAM on SSH. `!` is a locked account and without UsePAM
-#   the user can't login anymore with keybased authentication.
-
+#   Default: false. When true, a user with an empty password will have a `*`
+#   set as password instead of a `!`. This is especially handy if you want to
+#   disable UsePAM for SSH. `!` is a locked account and without UsePAM the user
+#   can't login anymore with key-based authentication.
+#
 # === Examples
 #
 #  class { 'identity':
