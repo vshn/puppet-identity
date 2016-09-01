@@ -143,12 +143,10 @@ define identity::user (
   # If the emptypassword_policy is set to true we'll set the password to "*" which still allows login via SSH if only keybased login is permitted.
   if $password {
     $_password = $password
+  } elsif $emptypassword_policy {
+    $_password = "*"
   } else {
-    if $emptypassword_policy {
-      $_password = "*"
-    } else {
-      $_password = "!"
-    }
+    $_password = "!"
   }
 
   user { $username:

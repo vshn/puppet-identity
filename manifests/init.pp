@@ -94,6 +94,7 @@ class identity (
   $dotfiles_source = undef,
   $emptypassword_policy = false,
 ) {
+  validate_bool($emptypassword_policy)
 
   # User handling
   if $manage_users {
@@ -105,22 +106,17 @@ class identity (
       $_users = hiera_hash($hiera_users_key,{})
     }
 
-    # check if $emptypassword_policy is validate_bool
-    validate_bool($emptypassword_policy)
-    if $emptypassword_policy {
-      $_emptypassword_policy = { "emptypassword_policy" => true}
-    } else {
-      $_emptypassword_policy = { "emptypassword_policy" => false}
-    }
-
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
       validate_hash($user_defaults)
-      $_user_defaults = merge($user_defaults, $_emptypassword_policy)
+      $_user_defaults = $user_defaults
     } else {
-      $_user_defaults = merge(hiera_hash($hiera_user_defaults_key,{}), $_emptypassword_policy)
+      $_user_defaults = hiera_hash($hiera_user_defaults_key, {})
     }
-    create_resources('identity::user',$_users,$_user_defaults)
+
+    create_resources('::identity::user', $_users, merge({
+      "emptypassword_policy" => $emptypassword_policy,
+      }, $_user_defaults))
   }
 
   # Group handling
