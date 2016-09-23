@@ -189,6 +189,38 @@ define identity::user (
       if $manage_group {
         User[$username] -> Group[$username]
       }
+
+      ensure_packages(['procps'])
+
+      exec { "crontab-remove-${username}":
+        onlyif  => "/usr/bin/crontab -u '${username}' -l",
+        command => "/usr/bin/crontab -u '${username}' -r",
+      } ->
+      User[$username]
+
+      # The numeric UID may not be available
+      $_pkill_uid = pick($_uid, $username)
+
+      exec { "pkill-user-${username}":
+        require => [
+          Package[procps],
+
+          # Crontab must be disabled first to avoid a race condition
+          Exec["crontab-remove-${username}"],
+          ],
+        onlyif  => "/usr/bin/pgrep --uid '${_pkill_uid}'",
+        command => "/bin/bash -x -c '
+          for ((i=0; i < 3; ++i)); do
+            /usr/bin/pkill --uid \"${_pkill_uid}\" || break
+            sleep 1
+          done
+
+          if /usr/bin/pgrep --uid '${_pkill_uid}'; then
+            /usr/bin/pkill --signal KILL --uid '${_pkill_uid}'
+          fi
+        '",
+      } ->
+      User[$username]
     }
     'present': {
       if $manage_group {
