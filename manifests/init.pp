@@ -59,10 +59,11 @@
 #   Example: 'puppet:///modules/identity_data'
 #
 # [*emptypassword_policy*]
-#   Default: false. When true, a user with an empty password will have a `*` set as password instead of
-#   a `!`. This is especially handy if you want to disable UsePAM on SSH. `!` is a locked account and without UsePAM
-#   the user can't login anymore with keybased authentication.
-
+#   Default: false. When true, a user with an empty password will have a `*`
+#   set as password instead of a `!`. This is especially handy if you want to
+#   disable UsePAM for SSH. `!` is a locked account and without UsePAM the user
+#   can't login anymore with key-based authentication.
+#
 # === Examples
 #
 #  class { 'identity':
@@ -94,6 +95,7 @@ class identity (
   $dotfiles_source = undef,
   $emptypassword_policy = false,
 ) {
+  validate_bool($emptypassword_policy)
 
   # User handling
   if $manage_users {
@@ -105,22 +107,17 @@ class identity (
       $_users = hiera_hash($hiera_users_key,{})
     }
 
-    # check if $emptypassword_policy is validate_bool
-    validate_bool($emptypassword_policy)
-    if $emptypassword_policy {
-      $_emptypassword_policy = { "emptypassword_policy" => true}
-    } else {
-      $_emptypassword_policy = { "emptypassword_policy" => false}
-    }
-
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
       validate_hash($user_defaults)
-      $_user_defaults = merge($user_defaults, $_emptypassword_policy)
+      $_user_defaults = $user_defaults
     } else {
-      $_user_defaults = merge(hiera_hash($hiera_user_defaults_key,{}), $_emptypassword_policy)
+      $_user_defaults = hiera_hash($hiera_user_defaults_key, {})
     }
-    create_resources('identity::user',$_users,$_user_defaults)
+
+    create_resources('::identity::user', $_users, merge({
+      "emptypassword_policy" => $emptypassword_policy,
+      }, $_user_defaults))
   }
 
   # Group handling

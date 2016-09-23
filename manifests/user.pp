@@ -60,10 +60,11 @@
 #   the group will not be created and gid has to be set.
 #
 # [*emptypassword_policy*]
-#   Default: false. When true, a user with an empty password will have a `*` set as password instead of
-#   a `!`. This is especially handy if you want to disable UsePAM on SSH. `!` is a locked account and without UsePAM
-#   the user can't login anymore with keybased authentication.
-
+#   Default: false. When true, a user with an empty password will have a `*`
+#   set as password instead of a `!`. This is especially handy if you want to
+#   disable UsePAM for SSH. `!` is a locked account and without UsePAM the user
+#   can't login anymore with key-based authentication.
+#
 define identity::user (
   $ensure               = present,
   $comment              = '',
@@ -137,18 +138,26 @@ define identity::user (
   }
 
   # Handle passwords and empty password policy
-  # If a password is set we use that for the user
-  # If no password is set we decide upon emptypassword_policy
-  # By default an empty password in the user resource of puppet leads to a "!" - which is basically a locked user (if you connect with ssh key based authentication & UsePAM = no) you can't log in
-  # If the emptypassword_policy is set to true we'll set the password to "*" which still allows login via SSH if only keybased login is permitted.
+  #
+  # When given an empty password Puppet's user resource sets the entry in the
+  # password database to "!". By convention an account whose password is
+  # prefixed with the exclamation mark ("!") is locked/disabled.
+  #
+  # When the SSH daemon is configured to not use PAM ("UsePAM no"), login is
+  # not permitted for locked accounts even when using key-based authentication.
+  # With PAM SSH key-based login attempts skip PAM's authentication phase,
+  # making locked accounts accessible.
+  #
+  # Setting the password in the database to "*" circumvents the issue. No
+  # password hash will result in "*" and at the same time the password is not
+  # prefixed by "!". SSH without PAM will allow logins to these accounts.
+  #
   if $password {
     $_password = $password
+  } elsif $emptypassword_policy {
+    $_password = "*"
   } else {
-    if $emptypassword_policy {
-      $_password = "*"
-    } else {
-      $_password = "!"
-    }
+    $_password = "!"
   }
 
   user { $username:
