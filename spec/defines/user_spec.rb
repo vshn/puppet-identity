@@ -32,7 +32,7 @@ describe 'identity::user', :type => :define do
     let(:params) { { 'manage_dotfiles' => true } }
     it { should contain_group('testuser') }
     it { should contain_file('/home/testuser').with_ensure('directory') }
-    it { should contain_file('/home/testuser').with_mode('0755') }
+    it { should contain_file('/home/testuser').with_mode('0750') }
   end
   context 'with manage_dotfiles => true and manage_home => false' do
     let(:params) { { 'manage_dotfiles' => true, 'manage_home' => false } }
