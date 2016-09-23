@@ -40,7 +40,7 @@
 #   Default: false. Manage home folder permissions recursively.
 #
 # [*home_perms*]
-#   Default: 0755. Home folder permissions
+#   Default: 0750. Home folder permissions
 #
 # [*system*]
 #   Default: false. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-system
@@ -76,7 +76,7 @@ define identity::user (
   $manage_home          = true,
   $home                 = undef,
   $home_perms_recursive = false,
-  $home_perms           = '0755',
+  $home_perms           = '0750',
   $system               = false,
   $shell                = '/bin/bash',
   $ignore_uid_gid       = false,
