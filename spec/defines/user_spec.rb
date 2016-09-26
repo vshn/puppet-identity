@@ -8,9 +8,18 @@ describe 'identity::user', :type => :define do
 
   context 'with ensure => absent' do
     let(:params) { { 'ensure' => 'absent' } }
+    let(:facts) { { 'osfamily' => 'Debian' } }
     it { should contain_group('testuser') }
     it { should contain_user('testuser').with_ensure('absent') }
     it { should contain_group('testuser').with_ensure('absent') }
+    it { should contain_exec('crontab-remove-testuser') }
+    it { should contain_exec('pkill-user-testuser') }
+    it { should contain_package('procps') }
+
+    context 'on RedHat' do
+      let(:facts) { { 'osfamily' => 'RedHat' } }
+      it { should contain_package('procps-ng') }
+    end
   end
 
   # ignore_uid_gid functionality

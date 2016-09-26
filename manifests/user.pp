@@ -155,9 +155,9 @@ define identity::user (
   if $password {
     $_password = $password
   } elsif $emptypassword_policy {
-    $_password = "*"
+    $_password = '*'
   } else {
-    $_password = "!"
+    $_password = '!'
   }
 
   user { $username:
@@ -190,7 +190,12 @@ define identity::user (
         User[$username] -> Group[$username]
       }
 
-      ensure_packages(['procps'])
+      $_procps_pkg = downcase($::osfamily) ? {
+        'redhat' => 'procps-ng',
+        default  => 'procps',
+      }
+
+      ensure_packages([$_procps_pkg])
 
       exec { "crontab-remove-${username}":
         onlyif  => "/usr/bin/crontab -u '${username}' -l",
@@ -203,7 +208,7 @@ define identity::user (
 
       exec { "pkill-user-${username}":
         require => [
-          Package[procps],
+          Package[$_procps_pkg],
 
           # Crontab must be disabled first to avoid a race condition
           Exec["crontab-remove-${username}"],
