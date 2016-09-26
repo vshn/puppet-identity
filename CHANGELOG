@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [3.1.0] - 2015-09-26
+### Added
+
+* `emptypassword_policy` parameter added. Thanks to @dasrecht
+* User cleanup process when a user is absented. Thanks to @hansmi
+
 ## [3.0.3] - 2015-06-29
 ### Fixed
 * The hiera query now has an empty default to not fail if there is no
