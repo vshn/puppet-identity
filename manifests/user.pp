@@ -203,9 +203,6 @@ define identity::user (
       } ->
       User[$username]
 
-      # The numeric UID may not be available
-      $_pkill_uid = pick($_uid, $username)
-
       exec { "pkill-user-${username}":
         require => [
           Package[$_procps_pkg],
@@ -213,15 +210,18 @@ define identity::user (
           # Crontab must be disabled first to avoid a race condition
           Exec["crontab-remove-${username}"],
           ],
-        onlyif  => "/usr/bin/pgrep --uid '${_pkill_uid}'",
+
+        # procps would support numeric UIDs, but they are sometimes reused with
+        # different usernames.
+        onlyif  => "/usr/bin/pgrep --uid '${username}'",
         command => "/bin/bash -x -c '
           for ((i=0; i < 3; ++i)); do
-            /usr/bin/pkill --uid \"${_pkill_uid}\" || break
+            /usr/bin/pkill --uid \"${username}\" || break
             sleep 1
           done
 
-          if /usr/bin/pgrep --uid '${_pkill_uid}'; then
-            /usr/bin/pkill --signal KILL --uid '${_pkill_uid}'
+          if /usr/bin/pgrep --uid '${username}'; then
+            /usr/bin/pkill --signal KILL --uid '${username}'
           fi
         '",
       } ->
