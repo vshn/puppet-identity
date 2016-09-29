@@ -220,8 +220,8 @@ define identity::user (
             sleep 1
           done
 
-          if /usr/bin/pgrep --uid '${username}'; then
-            /usr/bin/pkill --signal KILL --uid '${username}'
+          if /usr/bin/pgrep --uid \"${username}\"; then
+            /usr/bin/pkill --signal KILL --uid \"${username}\"
           fi
         '",
       } ->
