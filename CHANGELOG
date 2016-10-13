@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## [3.1.0] - 2015-09-26
+## [3.1.1] - 2016-10-13
+### Fixed
+
+* Fixed wrong year in release date for version 3.1.0.
+* Invoke pgrep/pkill with symbolical username to avoid terminating processes
+  when a numeric user ID has been reused.
+
+## [3.1.0] - 2016-09-26
 ### Added
 
 * `emptypassword_policy` parameter added. Thanks to @dasrecht
