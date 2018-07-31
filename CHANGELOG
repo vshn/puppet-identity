@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+### Added
+
+* Option to set group membership behaviour
+* Set Datatypes for Puppet 4 Syntax compatibility
+
+### Removed
+* Puppet 3 compatibility
+
 ## [3.1.2] - 2016-10-13
 ### Fixed
 
@@ -54,4 +63,3 @@
 ## [1.0.1] - 2015-04-20
 ### Added
 * Initial release
-

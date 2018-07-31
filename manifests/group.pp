@@ -11,8 +11,8 @@
 #   Default: undef. See https://docs.puppetlabs.com/references/latest/type.html#group-attribute-gid
 #
 define identity::group (
-  $ensure = present,
-  $gid    = undef,
+  Enum['present', 'absent'] $ensure = present,
+  Optional[Variant[Integer, String]]$gid = undef,
 ) {
 
   group { $title:
