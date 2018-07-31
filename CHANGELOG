@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+### Added
+
+* Option to set group membership behaviour
+
 ## [3.1.2] - 2016-10-13
 ### Fixed
 
@@ -54,4 +59,3 @@
 ## [1.0.1] - 2015-04-20
 ### Added
 * Initial release
-

@@ -33,6 +33,9 @@
 #   Default: true. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-managehome
 #   It also removes the homedirectory if the parameter ensure is set to absent.
 #
+# [*membership*]
+#   Default: minimum. See https://puppet.com/docs/puppet/5.5/type.html#user-attribute-membership
+#
 # [*home*]
 #   Default: /home/$username. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-home
 #
@@ -75,6 +78,7 @@ define identity::user (
   $ssh_keys             = {},
   $purge_ssh_keys       = true,
   $manage_home          = true,
+  Optional[Enum['minimum', 'inclusive']] $membership = 'minimum',
   $home                 = undef,
   $home_perms_recursive = false,
   $home_perms           = '0755',
@@ -168,6 +172,7 @@ define identity::user (
     shell          => $shell,
     comment        => $comment,
     managehome     => $manage_home,
+    membership     => $membership,
     home           => $home_dir,
     password       => $_password,
     purge_ssh_keys => $purge_ssh_keys,
