@@ -6,8 +6,16 @@
 * Option to set group membership behaviour
 * Set Datatypes for Puppet 4 Syntax compatibility
 
+## [4.0.0] - 2018-08-10
+
+### Added
+* Option to set user memebership type
+
 ### Removed
 * Puppet 3 compatibility
+
+### Note
+* For puppet 4 this change is backwards compatible
 
 ## [3.1.2] - 2016-10-13
 ### Fixed
