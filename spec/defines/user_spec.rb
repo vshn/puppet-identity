@@ -54,6 +54,14 @@ describe 'identity::user', :type => :define do
     it { should contain_file('/home/testuser').with_ensure('directory') }
     it { should contain_file('/home/testuser').with_mode('0700') }
   end
+  context 'with membership => minimum' do
+    let(:params) { { 'membership' => 'minimum' } }
+    it { should contain_user('testuser').with_membership('minimum') }
+  end
+  context 'with membership => miniminclusive' do
+    let(:params) { { 'membership' => 'inclusive' } }
+    it { should contain_user('testuser').with_membership('inclusive') }
+  end
 
   # manage_group
   context 'with manage_group => false' do

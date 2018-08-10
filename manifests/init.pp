@@ -80,28 +80,25 @@
 # Copyright 2015 Tobias Brunner, VSHN AG
 #
 class identity (
-  $user_defaults = {},
-  $users = {},
-  $group_defaults = {},
-  $groups = {},
-  $hiera_user_defaults_key = 'user_defaults',
-  $hiera_users_key = 'users',
-  $hiera_group_defaults_key = 'group_defaults',
-  $hiera_groups_key = 'groups',
-  $manage_users = true,
-  $manage_groups = true,
-  $manage_skel = false,
-  $skel_source = undef,
-  $dotfiles_source = undef,
-  $emptypassword_policy = false,
+  Hash[Any, Any] $user_defaults = {},
+  Hash[Any, Any] $users = {},
+  Hash[Any, Any] $group_defaults = {},
+  Hash[Any, Any] $groups = {},
+  String $hiera_user_defaults_key = 'user_defaults',
+  String $hiera_users_key = 'users',
+  String $hiera_group_defaults_key = 'group_defaults',
+  String $hiera_groups_key = 'groups',
+  Boolean $manage_users = true,
+  Boolean $manage_groups = true,
+  Boolean $manage_skel = false,
+  Optional[String] $skel_source = undef,
+  Optional[String] $dotfiles_source = undef,
+  Boolean $emptypassword_policy = false,
 ) {
-  validate_bool($emptypassword_policy)
-
   # User handling
   if $manage_users {
     # check if $users parameter contains data
     if ! empty($users) {
-      validate_hash($users)
       $_users = $users
     } else {
       $_users = hiera_hash($hiera_users_key,{})
@@ -109,14 +106,13 @@ class identity (
 
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
-      validate_hash($user_defaults)
       $_user_defaults = $user_defaults
     } else {
       $_user_defaults = hiera_hash($hiera_user_defaults_key, {})
     }
 
     create_resources('::identity::user', $_users, merge({
-      "emptypassword_policy" => $emptypassword_policy,
+      'emptypassword_policy' => $emptypassword_policy,
       }, $_user_defaults))
   }
 
@@ -124,14 +120,12 @@ class identity (
   if $manage_groups {
     # check if $groups parameter contains data
     if ! empty($groups) {
-      validate_hash($groups)
       $_groups = $groups
     } else {
       $_groups = hiera_hash($hiera_groups_key,{})
     }
     # check if $group_defaults parameter contains data
     if ! empty($group_defaults) {
-      validate_hash($group_defaults)
       $_group_defaults = $group_defaults
     } else {
       $_group_defaults = hiera_hash($hiera_group_defaults_key,{})

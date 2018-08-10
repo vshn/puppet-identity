@@ -105,9 +105,9 @@ All parameters are documented inline. Have a look at the .pp files in `manifests
 
 ## Limitations
 
-The module is just tested under Ubuntu 14.04, but it should work on other platforms too.
-As the module is using the `purge_ssh_keys` parameter, it's not compatibly with Puppet versions
-below 3.6.0.
+The module is just tested under Ubuntu 16.04, but it should work on other platforms too.
+As the module is using the `purge_ssh_keys` parameter, it's not tested for
+compatibly with Puppet versions below 4.10
 
 ## Development
 
@@ -118,4 +118,3 @@ below 3.6.0.
 5. Create a new Pull Request
 
 Make sure your PR passes the Rspec tests.
-

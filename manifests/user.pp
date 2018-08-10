@@ -33,6 +33,9 @@
 #   Default: true. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-managehome
 #   It also removes the homedirectory if the parameter ensure is set to absent.
 #
+# [*membership*]
+#   Default: minimum. See https://puppet.com/docs/puppet/5.5/type.html#user-attribute-membership
+#
 # [*home*]
 #   Default: /home/$username. See https://docs.puppetlabs.com/references/latest/type.html#user-attribute-home
 #
@@ -66,40 +69,30 @@
 #   can't login anymore with key-based authentication.
 #
 define identity::user (
-  $ensure               = present,
-  $comment              = '',
-  $uid                  = undef,
-  $gid                  = undef,
-  $groups               = [],
-  $password             = undef,
-  $ssh_keys             = {},
-  $purge_ssh_keys       = true,
-  $manage_home          = true,
-  $home                 = undef,
-  $home_perms_recursive = false,
-  $home_perms           = '0755',
-  $system               = false,
-  $shell                = '/bin/bash',
-  $ignore_uid_gid       = false,
-  $manage_dotfiles      = false,
-  $manage_group         = true,
-  $emptypassword_policy = false,
+  Enum['present', 'absent'] $ensure = present,
+  String $comment = '',
+  Optional[Variant[Integer, String]] $uid = undef,
+  Optional[Variant[Integer, String]] $gid = undef,
+  Array[String] $groups = [],
+  Optional[String] $password = undef,
+  Hash[Any, Any] $ssh_keys = {},
+  Boolean $purge_ssh_keys = true,
+  Boolean $manage_home = true,
+  Optional[Enum['minimum', 'inclusive']] $membership = 'minimum',
+  Optional[String] $home = undef,
+  Boolean $home_perms_recursive = false,
+  String $home_perms = '0755',
+  Boolean $system = false,
+  String $shell = '/bin/bash',
+  Boolean $ignore_uid_gid = false,
+  Boolean $manage_dotfiles = false,
+  Boolean $manage_group = true,
+  Boolean $emptypassword_policy = false,
 ) {
 
   include ::identity
 
   # Input validation
-  validate_string($comment)
-  validate_array($groups)
-  validate_hash($ssh_keys)
-  validate_bool($purge_ssh_keys)
-  validate_bool($manage_home)
-  validate_bool($system)
-  validate_absolute_path($shell)
-  validate_bool($ignore_uid_gid)
-  validate_bool($manage_dotfiles)
-  validate_bool($manage_group)
-  validate_bool($emptypassword_policy)
 
   # Check if gid is set when manage_group is false
   unless $manage_group {
@@ -114,7 +107,6 @@ define identity::user (
     undef   => "/home/${username}",
     default => $home,
   }
-  validate_absolute_path($home_dir)
 
   # ignore $uid and $gid, even if they are passed
   if $ignore_uid_gid {
@@ -168,6 +160,7 @@ define identity::user (
     shell          => $shell,
     comment        => $comment,
     managehome     => $manage_home,
+    membership     => $membership,
     home           => $home_dir,
     password       => $_password,
     purge_ssh_keys => $purge_ssh_keys,
