@@ -9,7 +9,7 @@
 ## [4.0.0] - 2018-08-10
 
 ### Added
-* Option to set user memebership type
+* Option to set user membership type
 
 ### Removed
 * Puppet 3 compatibility
