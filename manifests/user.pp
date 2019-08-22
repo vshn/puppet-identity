@@ -238,9 +238,9 @@ define identity::user (
           default => undef,
         }
         if $manage_group {
-          $_group = $_gid
-        } else {
           $_group = $username
+        } else {
+          $_group = $gid
         }
         file { $home_dir:
           ensure  => directory,
