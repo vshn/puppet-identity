@@ -1,6 +1,6 @@
 {
   "name": "vshn-identity",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "author": "Tobias Brunner",
   "summary": "Provides helpers to manage users and groups",
   "license": "BSD-3-Clause",
