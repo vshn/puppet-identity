@@ -94,8 +94,12 @@ define identity::user (
 
   # Input validation
 
-  # Check if gid is set when manage_group is false
-  unless $manage_group {
+  # Validate that the combination of manage_group and gid works
+  if $manage_group {
+    if $gid =~ String {
+      fail('Cannot specify $gid as string when $manage_group=true')
+    }
+  } else {
     unless $gid {
       fail('If group is not managed, the gid has to be set')
     }
@@ -238,9 +242,9 @@ define identity::user (
           default => undef,
         }
         if $manage_group {
-          $_group = $_gid
-        } else {
           $_group = $username
+        } else {
+          $_group = $gid
         }
         file { $home_dir:
           ensure  => directory,

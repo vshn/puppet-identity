@@ -1,6 +1,21 @@
 # CHANGELOG
 
 ## Unreleased
+
+## [5.0.0] - 2019-08-23
+
+### Removed
+* Puppet 4 testing/compatibility
+
+### Fixed
+* Disallow specifying a non-numerical primary group when user's primary group is managed
+* Correctly set user's home directory group to the provided gid when user's primary group is not managed
+
+### Note
+* For puppet 5 this change is backwards compatible
+
+## [4.0.1] - 2019-03-07
+
 ### Added
 
 * Option to set group membership behaviour
