@@ -228,14 +228,7 @@ define identity::user (
       if $manage_group {
         Group[$username] -> User[$username]
       }
-      if $ssh_keys {
-        $ssh_key_defaults = {
-          ensure => present,
-          user   => $username,
-          'type' => 'ssh-rsa'
-        }
-        create_resources('ssh_authorized_key',prefix($ssh_keys,"${name}-"),$ssh_key_defaults)
-      }
+
       if $manage_home {
         $dotfiles_source = $manage_dotfiles ? {
           true    => "${::identity::dotfiles_source}/${username}",
@@ -253,12 +246,30 @@ define identity::user (
           owner   => $username,
           group   => $_group,
           mode    => $home_perms,
+          require => User[$username]
         }
+      }
+
+      if $ssh_keys {
+        if $manage_home {
+          $ssh_key_defaults = {
+            ensure => present,
+            user   => $username,
+            'type' => 'ssh-rsa',
+            require => File[$home_dir]
+          }
+        } else {
+          $ssh_key_defaults = {
+            ensure => present,
+            user   => $username,
+            'type' => 'ssh-rsa',
+          }
+        }
+        create_resources('ssh_authorized_key',prefix($ssh_keys,"${name}-"),$ssh_key_defaults)
       }
     }
     default: {
       fail('The $ensure parameter must be \'absent\' or \'present\'')
     }
   }
-
 }
