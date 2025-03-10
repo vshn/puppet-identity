@@ -199,30 +199,6 @@ define identity::user (
         command => "/usr/bin/crontab -u '${username}' -r",
       } ->
       User[$username]
-
-      exec { "pkill-user-${username}":
-        require => [
-          Package[$_procps_pkg],
-
-          # Crontab must be disabled first to avoid a race condition
-          Exec["crontab-remove-${username}"],
-          ],
-
-        # procps would support numeric UIDs, but they are sometimes reused with
-        # different usernames.
-        onlyif  => "/usr/bin/pgrep --uid '${username}'",
-        command => "/bin/bash -x -c '
-          for ((i=0; i < 3; ++i)); do
-            /usr/bin/pkill --uid \"${username}\" || break
-            sleep 1
-          done
-
-          if /usr/bin/pgrep --uid \"${username}\"; then
-            /usr/bin/pkill --signal KILL --uid \"${username}\"
-          fi
-        '",
-      } ->
-      User[$username]
     }
     'present': {
       if $manage_group {
