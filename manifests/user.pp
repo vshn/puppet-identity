@@ -187,7 +187,7 @@ define identity::user (
         User[$username] -> Group[$username]
       }
 
-      $_procps_pkg = downcase($::osfamily) ? {
+      $_procps_pkg = downcase($facts['os']['family']) ? {
         'redhat' => 'procps-ng',
         default  => 'procps',
       }
