@@ -111,7 +111,7 @@ class identity (
       $_user_defaults = hiera_hash($hiera_user_defaults_key, {})
     }
 
-    create_resources('::identity::user', $_users, merge({
+    create_resources('identity::user', $_users, merge({
       'emptypassword_policy' => $emptypassword_policy,
       }, $_user_defaults))
   }

@@ -90,7 +90,7 @@ define identity::user (
   Boolean $emptypassword_policy = false,
 ) {
 
-  include ::identity
+  include identity
 
   # Input validation
 
@@ -231,7 +231,7 @@ define identity::user (
 
       if $manage_home {
         $dotfiles_source = $manage_dotfiles ? {
-          true    => "${::identity::dotfiles_source}/${username}",
+          true    => "${identity::dotfiles_source}/${username}",
           default => undef,
         }
         if $manage_group {
