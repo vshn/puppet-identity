@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## [5.0.4] - 2025-12-23
+* Don't use global fact `osfamily`
+* Remove unnecessary '::' prefix
+* Remove unused clientcert reference from test hiera config file
+
 ## [5.0.3] - 2021-08-06 
 * fixing ordering
 
