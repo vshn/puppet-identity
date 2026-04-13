@@ -101,14 +101,14 @@ class identity (
     if ! empty($users) {
       $_users = $users
     } else {
-      $_users = hiera_hash($hiera_users_key,{})
+      $_users = lookup($hiera_users_key, Hash, 'deep', {})
     }
 
     # check if $user_defaults parameter contains data
     if ! empty($user_defaults) {
       $_user_defaults = $user_defaults
     } else {
-      $_user_defaults = hiera_hash($hiera_user_defaults_key, {})
+      $_user_defaults = lookup($hiera_user_defaults_key, Hash, 'deep', {})
     }
 
     create_resources('identity::user', $_users, merge({
@@ -122,13 +122,13 @@ class identity (
     if ! empty($groups) {
       $_groups = $groups
     } else {
-      $_groups = hiera_hash($hiera_groups_key,{})
+      $_groups = lookup($hiera_groups_key, Hash, 'deep', {})
     }
     # check if $group_defaults parameter contains data
     if ! empty($group_defaults) {
       $_group_defaults = $group_defaults
     } else {
-      $_group_defaults = hiera_hash($hiera_group_defaults_key,{})
+      $_group_defaults = lookup($hiera_group_defaults_key, Hash, 'deep', {})
     }
     create_resources('identity::group',$_groups,$_group_defaults)
   }
