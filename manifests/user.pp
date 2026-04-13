@@ -197,8 +197,8 @@ define identity::user (
       exec { "crontab-remove-${username}":
         onlyif  => "/usr/bin/crontab -u '${username}' -l",
         command => "/usr/bin/crontab -u '${username}' -r",
-      } ->
-      User[$username]
+      }
+      -> User[$username]
 
       exec { "pkill-user-${username}":
         require => [
@@ -221,8 +221,8 @@ define identity::user (
             /usr/bin/pkill --signal KILL --uid \"${username}\"
           fi
         '",
-      } ->
-      User[$username]
+      }
+      -> User[$username]
     }
     'present': {
       if $manage_group {

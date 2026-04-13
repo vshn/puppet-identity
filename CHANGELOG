@@ -2,55 +2,53 @@
 
 ## Unreleased
 
+## [6.0.0] - 2026-04-13
+### Fixed
+* Use `lookup()` with 'deep' merge instead of `hiera_hash()` with undefined merge.
+* Fix linter warnings
+### Note
+* For setups which don't have a Hiera default merge of 'deep' this may be a breaking change depending on your Hiera data.
+
 ## [5.0.4] - 2025-12-23
+### Fixed
 * Don't use global fact `osfamily`
 * Remove unnecessary '::' prefix
 * Remove unused clientcert reference from test hiera config file
 
 ## [5.0.3] - 2021-08-06 
+### Fixed
 * fixing ordering
 
-
 ## [5.0.0] - 2019-08-26
-
 ### Removed
 * Puppet 4 testing/compatibility
-
 ### Fixed
 * Disallow specifying a non-numerical primary group when user's primary group is managed
 * Correctly set user's home directory group to the provided gid when user's primary group is not managed
-
 ### Note
 * For puppet 5 this change is backwards compatible
 
 ## [4.0.1] - 2019-03-07
-
 ### Added
-
 * Option to set group membership behaviour
 * Set Datatypes for Puppet 4 Syntax compatibility
 
 ## [4.0.0] - 2018-08-10
-
 ### Added
 * Option to set user membership type
-
 ### Removed
 * Puppet 3 compatibility
-
 ### Note
 * For puppet 4 this change is backwards compatible
 
 ## [3.1.2] - 2016-10-13
 ### Fixed
-
 * Fixed wrong year in release date for version 3.1.0.
 * Invoke pgrep/pkill with symbolical username to avoid terminating processes
   when a numeric user ID has been reused.
 
 ## [3.1.0] - 2016-09-26
 ### Added
-
 * `emptypassword_policy` parameter added. Thanks to @dasrecht
 * User cleanup process when a user is absented. Thanks to @hansmi
 
